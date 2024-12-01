@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useAuth } from "../../context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 const AdminCreateQuiz = () => {
   const [quizData, setQuizData] = useState({
@@ -50,6 +52,13 @@ const AdminCreateQuiz = () => {
       ],
     });
   };
+
+
+  const { isAuthenticated, user, logout } = useAuth();
+  if (!isAuthenticated) {
+    // Redirect to home if not logged in
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();

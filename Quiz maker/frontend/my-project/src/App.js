@@ -11,17 +11,25 @@ import QuizList from './pages/User/Quiz_List';
 import UserQuizResult from './pages/User/UserQuizResult';
 import UserDashboard from './pages/User/UserDashboard';
 import Settings from './pages/User/Settings';
+import Registration from './pages/Register';
+import Quiz_Mange from './pages/Admin/Quiz_Mange';
+
+import { AuthProvider } from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 
 
 
 function App() {
+  console.log();
+  
   return (
+    <AuthProvider>
     <Router>
     <div>
       <header>
       {/* <Nav isAdmin={false} isLoggedIn={true} /> */}
-      {/* <Nav isAdmin={true} isLoggedIn={false} /> */}
-      <Nav isAdmin={true} isLoggedIn={true} />
+      <Nav isAdmin={true} isLoggedIn={false} />
+      {/* <Nav isAdmin={true} isLoggedIn={true} /> */}
       </header>
       <main>
      
@@ -34,6 +42,9 @@ function App() {
             <Route path="/user/:userId/results" element={<UserQuizResult />} />
             <Route path="/dashboard" element={<UserDashboard />} />   {/* user dashboard*/ }
             <Route path="/settings" element={<Settings />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Registration />} />
+            <Route path="/admin/quizzes" element={<Quiz_Mange />} />
 
 
 
@@ -43,6 +54,7 @@ function App() {
     
     </div>
     </Router>
+    </AuthProvider>
   );
 }
 

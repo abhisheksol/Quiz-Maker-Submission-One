@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 const Settings = () => {
   const [formData, setFormData] = useState({
@@ -11,7 +13,11 @@ const Settings = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
+  const { isAuthenticated, user, logout } = useAuth();
+  if (!isAuthenticated) {
+    // Redirect to home if not logged in
+    return <Navigate to="/" replace />;
+  }
   const handleSave = (e) => {
     e.preventDefault();
     alert("Settings Saved Successfully!");

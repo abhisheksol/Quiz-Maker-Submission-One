@@ -1,9 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from "../../context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 const UserDashboard = () => {
   const userId = "123"; // Replace with dynamic user ID if available
+  const { isAuthenticated, user, logout } = useAuth();
+ console.log("this is ",isAuthenticated);
 
+  if (!isAuthenticated) {
+    // Redirect to home if not logged in
+    return <Navigate to="/" replace />;
+  }
+ 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">

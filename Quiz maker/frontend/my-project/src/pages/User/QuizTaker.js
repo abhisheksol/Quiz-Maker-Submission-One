@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { quizDetails } from './quiz_details_sample_data'; // Import sample data
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const QuizDetails = () => {
   const { id } = useParams(); // Get quiz ID from URL parameters
@@ -8,12 +10,22 @@ const QuizDetails = () => {
   const [answers, setAnswers] = useState({});
   const [submissionStatus, setSubmissionStatus] = useState(null);
 
+  const { isAuthenticated, user, logout } = useAuth();
+  
+
+
+
   useEffect(() => {
     // For now, we directly use the mock data based on the quiz ID
     if (id === quizDetails.id) {
       setQuiz(quizDetails);
     }
   }, [id]);
+
+  if (!isAuthenticated) {
+    // Redirect to home if not logged in
+    return <Navigate to="/" replace />;
+  }
 
   const handleAnswerChange = (questionId, value) => {
     setAnswers((prevAnswers) => ({
