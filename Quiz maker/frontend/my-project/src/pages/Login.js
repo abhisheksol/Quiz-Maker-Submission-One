@@ -35,7 +35,11 @@ const Login = () => {
     console.log(userData);
     
     // navigate("/"); // Redirect to Home or Dashboard
-    navigate("/dashboard"); // Redirect to Home or Dashboard
+    if (userData.role === "admin") {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("/user/dashboard");
+    }
   };
 
   return (

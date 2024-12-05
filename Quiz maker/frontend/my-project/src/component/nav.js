@@ -12,7 +12,7 @@ const Navbar = () => {
   const isAdmin = user?.role === "admin"; // Determine if the user is an admin
 
   return (
-    <main>
+    <main >
       {/* Top Navbar */}
       <nav className="flex justify-between px-8 items-center py-6 bg-gray-600 text-white">
         <div className="flex items-center gap-8">
@@ -39,19 +39,21 @@ const Navbar = () => {
             )}
             {isAuthenticated && (
               <>
-                <Link to="/dashboard" className="hover:underline">Dashboard</Link>
+
                 {isAdmin ? (
                   <>
+                    <Link to="/admin/dashboard" className="hover:underline">Dashboard</Link>
                     <Link to="/admin/quizzes" className="hover:underline">Manage Quizzes</Link>
                     <Link to="/admin/create" className="hover:underline">Create Quiz</Link>
                   </>
                 ) : (
                   <>
+                    <Link to="/user/dashboard" className="hover:underline">Dashboard</Link>
                     <Link to="/user/quizzes" className="hover:underline">Quizzes</Link>
                     <Link to="/user/1/results" className="hover:underline">My Results</Link>
                   </>
                 )}
-                <Link to="/settings" className="hover:underline">Settings</Link>
+                <Link to="/leaderboard" className="hover:underline">leaderboard</Link>
               </>
             )}
           </div>
@@ -78,19 +80,21 @@ const Navbar = () => {
             )}
             {isAuthenticated && (
               <>
-                <Link to="/dashboard" className="font-bold">Dashboard</Link>
                 {isAdmin ? (
                   <>
+                    <Link to="/admin/dashboard" className="hover:underline">Dashboard</Link>
+
                     <Link to="/admin/quizzes" className="font-bold">Manage Quizzes</Link>
                     <Link to="/admin/create" className="font-bold">Create Quiz</Link>
                   </>
                 ) : (
                   <>
+                    <Link to="/user/dashboard" className="hover:underline">Dashboard</Link>
                     <Link to="/user/quizzes" className="font-bold">Quizzes</Link>
                     <Link to="/user/1/results" className="font-bold">My Results</Link>
                   </>
                 )}
-                <Link to="/settings" className="font-bold">Settings</Link>
+                <Link to="/leaderboard" className="font-bold">leaderboard</Link>
               </>
             )}
           </section>

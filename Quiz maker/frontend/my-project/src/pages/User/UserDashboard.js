@@ -6,7 +6,7 @@ import { Navigate } from "react-router-dom";
 const UserDashboard = () => {
   const userId = "123"; // Replace with dynamic user ID if available
   const { isAuthenticated, user, logout } = useAuth();
- console.log("this is ",isAuthenticated);
+//  console.log("this is ",isAuthenticated);
 
   if (!isAuthenticated) {
     // Redirect to home if not logged in

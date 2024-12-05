@@ -13,10 +13,10 @@ import UserDashboard from './pages/User/UserDashboard';
 import Settings from './pages/User/Settings';
 import Registration from './pages/Register';
 import Quiz_Mange from './pages/Admin/Quiz_Mange';
-
+import AdminDashboard from './pages/Admin/AdminDashboard';
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
-
+import Leaderboard from './pages/Leaderboard';
 
 
 function App() {
@@ -40,12 +40,13 @@ function App() {
             <Route path="/quiz/:id" element={<QuizTaker />} />
             <Route path="/admin/create" element={<QuizCreator />} /> {/* Fixed this line */}
             <Route path="/user/:userId/results" element={<UserQuizResult />} />
-            <Route path="/dashboard" element={<UserDashboard />} />   {/* user dashboard*/ }
+            <Route path="/user/dashboard" element={<UserDashboard />} />   {/* user dashboard*/ }
             <Route path="/settings" element={<Settings />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/admin/quizzes" element={<Quiz_Mange />} />
-
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
 
 
           </Routes>
