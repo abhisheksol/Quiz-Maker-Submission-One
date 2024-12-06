@@ -1,8 +1,43 @@
 import React, { useState } from 'react';
 import { useAuth } from "../../context/AuthContext";
 import { Navigate } from "react-router-dom";
+import axios from 'axios';
+import { RiAiGenerate } from "react-icons/ri";
 
 const AdminCreateQuiz = () => {
+
+  const [explanation, setExplanation] = useState();
+  const [liveQuestionText, setLiveQuestionText] = useState({});
+
+  const handleAiExplanation = async (questionText) => {
+    console.log(questionText);
+    console.log("loading..................");
+
+    const response = await axios({
+
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCVPgDqL2UWciZUqdl_GyE6cSjsc3CNjiA",
+      method: "post",
+      data: {
+        "contents": [
+          {
+            "parts": [
+              {
+                text: ` "${questionText}" ? plz generate 4 mcq with one right and other wrong directly provdie option dont give other explaintion .`,
+              }
+              // "text": " what is 2*4/3 ? plz generate 4 mcq with answer"
+            ]
+          }
+        ]
+      }
+    })
+
+    console.log(response.data.candidates[0].content.parts[0].text);
+    setExplanation(response.data.candidates[0].content.parts[0].text)
+    console.log(explanation);
+
+
+  };
+
   const [quizData, setQuizData] = useState({
     title: '',
     description: '',
@@ -27,6 +62,18 @@ const AdminCreateQuiz = () => {
     const { name, value } = e.target;
     const updatedQuestions = [...quizData.questions];
     updatedQuestions[index][name] = value;
+
+    if (name === 'questionText') {
+      console.log(`Question ${index + 1}: ${value}`); // Log the input live
+      setLiveQuestionText(prevState => ({
+        ...prevState,
+        [index]: value, // Save the question text with the index as key
+      }));
+
+    }
+    // console.log("hello abhi", liveQuestionText);
+
+
     setQuizData({
       ...quizData,
       questions: updatedQuestions,
@@ -185,6 +232,24 @@ const AdminCreateQuiz = () => {
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   required
                 />
+              </div>
+              {/* generate ai button  */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => handleAiExplanation(liveQuestionText[index])}
+                  className="bg-yellow-200 text-black p-2 rounded-lg mt-4"
+                >
+                  <RiAiGenerate color='black' /> Generate Options
+                </button>
+
+                <div className="mt-6 ">
+                  {explanation && (
+                    <div className="bg-white text-gray-800  p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+                      <p className="text-lg leading-relaxed">{explanation}</p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Question Type */}
