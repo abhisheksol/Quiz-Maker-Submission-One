@@ -3,17 +3,46 @@ import { useParams } from 'react-router-dom';
 import { quizDetails } from './quiz_details_sample_data'; // Import sample data
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import axios from 'axios';
+import { RiAiGenerate } from "react-icons/ri";
 
 const QuizDetails = () => {
   const { id } = useParams(); // Get quiz ID from URL parameters
   const [quiz, setQuiz] = useState(null);
   const [answers, setAnswers] = useState({});
   const [submissionStatus, setSubmissionStatus] = useState(null);
+  const [explanations, setExplanations] = useState({}); // State to store AI explanations per question
 
   const { isAuthenticated, user, logout } = useAuth();
-  
 
+  const handleAiExplanation = async (questionId, questionText) => {
+    console.log(questionText);
+    console.log("loading..................");
 
+    const response = await axios({
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCVPgDqL2UWciZUqdl_GyE6cSjsc3CNjiA",
+      method: "post",
+      data: {
+        "contents": [
+          {
+            "parts": [
+              {
+                text: `Explain this question donot give me answer: "${questionText}" generate 2 lines only.`,
+              }
+            ]
+          }
+        ]
+      }
+    });
+
+    console.log(response.data.candidates[0].content.parts[0].text);
+
+    // Store the AI-generated explanation for the question
+    setExplanations((prevExplanations) => ({
+      ...prevExplanations,
+      [questionId]: response.data.candidates[0].content.parts[0].text,
+    }));
+  };
 
   useEffect(() => {
     // For now, we directly use the mock data based on the quiz ID
@@ -76,10 +105,33 @@ const QuizDetails = () => {
       {/* Displaying Questions */}
       <div className="space-y-6">
         {quiz.questions.map((question) => (
-          <div key={question.id} className="bg-white p-4 border border-gray-200 rounded-lg shadow-md">
+          <div
+            key={question.id}
+            className="relative bg-slate-50 p-4 border border-gray-200 rounded-lg shadow-md"
+          >
+            {/* AI Button with Tooltip */}
+            <div className="relative group">
+              <button
+                className="absolute top-4 right-4 bg-yellow-200 text-white p-2 rounded-full shadow hover:bg-blue-600"
+                onClick={() => handleAiExplanation(question.id, question.questionText)}
+              >
+                <RiAiGenerate color='black' />
+              </button>
+              {/* Tooltip */}
+              <div className="absolute top-12 right-0 bg-gray-800 text-white text-sm px-3 py-2 rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Explain the question with AI
+              </div>
+            </div>
+
+            {/* Question Text */}
             <h2 className="text-xl font-semibold">{question.questionText}</h2>
 
-            {/* Render question options based on type */}
+            {/* Display the AI Explanation below the question */}
+            {explanations[question.id] && (
+              <p className="mt-4 text-sm text-gray-700 italic">{explanations[question.id]}</p>
+            )}
+
+            {/* Multiple Choice Questions */}
             {question.type === "multiple-choice" && (
               <div className="mt-4">
                 {question.options.map((option, idx) => (
@@ -98,6 +150,7 @@ const QuizDetails = () => {
               </div>
             )}
 
+            {/* True/False Questions */}
             {question.type === "true-false" && (
               <div className="mt-4">
                 <div className="flex items-center mb-2">
@@ -125,6 +178,7 @@ const QuizDetails = () => {
               </div>
             )}
 
+            {/* Fill-in-the-Blank Questions */}
             {question.type === "fill-in-the-blank" && (
               <div className="mt-4">
                 <input
